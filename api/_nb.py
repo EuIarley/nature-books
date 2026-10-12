@@ -1,10 +1,3 @@
-"""Nature Books: lógica de contas (registro, login, sessão) compartilhada.
-
-- Na Vercel: usa Postgres (Neon) pela variável DATABASE_URL / POSTGRES_URL.
-- No seu computador: sem essas variáveis, usa SQLite (nature_books.db).
-
-Arquivos em api/ que começam com "_" não viram rotas na Vercel.
-"""
 import hashlib
 import hmac
 import json
@@ -26,7 +19,6 @@ MAX_BODY = 10_000
 FAIL_LIMIT, FAIL_WINDOW = 5, 600
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]{2,}$")
 
-# ---------- banco de dados ----------
 if PG_URL:
     import psycopg
     from psycopg.rows import dict_row
@@ -79,9 +71,7 @@ else:
         CREATE INDEX IF NOT EXISTS idx_login_fails_key ON login_fails(key);
     """
 
-
 class DB:
-    """Conexão curta com a mesma interface para SQLite e Postgres (placeholders escritos como ?)."""
 
     def __enter__(self):
         if PG_URL:
@@ -107,9 +97,7 @@ class DB:
     def one(self, sql, params=()):
         return self.run(sql, params).fetchone()
 
-
 _schema_ready = False
-
 
 def ensure_schema():
     global _schema_ready
@@ -122,22 +110,17 @@ def ensure_schema():
             db.conn.executescript(SCHEMA)
     _schema_ready = True
 
-
-# ---------- senhas e sessões ----------
 def hash_password(password, salt=None):
     salt = salt or secrets.token_hex(16)
     digest = hashlib.pbkdf2_hmac("sha256", password.encode(), bytes.fromhex(salt), PBKDF2_ITER)
     return digest.hex(), salt
 
-
 def check_password(password, stored_hash, salt):
     digest, _ = hash_password(password, salt)
     return hmac.compare_digest(digest, stored_hash)
 
-
 def token_hash(token):
     return hashlib.sha256(token.encode()).hexdigest()
-
 
 def create_session(db, user_id):
     token = secrets.token_urlsafe(32)
@@ -149,20 +132,15 @@ def create_session(db, user_id):
     db.run("DELETE FROM sessions WHERE expires_at < ?", (now,))
     return token
 
-
 def public_user(row):
     return {"id": row["id"], "name": row["name"], "email": row["email"], "created_at": row["created_at"]}
 
-
-# ---------- limite de tentativas (guardado no banco, funciona em serverless) ----------
 def too_many_fails(db, key):
     since = int(time.time()) - FAIL_WINDOW
     db.run("DELETE FROM login_fails WHERE at < ?", (since,))
     row = db.one("SELECT COUNT(*) AS n FROM login_fails WHERE key = ?", (key,))
     return row["n"] >= FAIL_LIMIT
 
-
-# ---------- requisições ----------
 class Response:
     def __init__(self, status, data, token=None, remember=False):
         self.status, self.data, self.token, self.remember = status, data, token, remember
@@ -187,14 +165,11 @@ class Response:
             h.append(("Set-Cookie", cookie))
         return h
 
-
 def session_token(headers):
     jar = cookies.SimpleCookie(headers.get("Cookie", ""))
     return jar[COOKIE].value if COOKIE in jar else None
 
-
 def handle(method, path, headers, read_body, client_ip):
-    """Ponto de entrada único: devolve um Response. read_body(n) lê n bytes do corpo."""
     path = path.split("?", 1)[0].rstrip("/")
     try:
         ensure_schema()
@@ -203,7 +178,6 @@ def handle(method, path, headers, read_body, client_ip):
         routes = {"/api/register": api_register, "/api/login": api_login, "/api/logout": api_logout}
         if method != "POST" or path not in routes:
             return Response(404, {"error": "Rota não encontrada."})
-        # só aceita JSON: formulários de outros sites não conseguem enviar isso sem permissão (CSRF)
         if not headers.get("Content-Type", "").startswith("application/json"):
             return Response(415, {"error": "Envie os dados em JSON."})
         length = int(headers.get("Content-Length") or 0)
@@ -216,10 +190,9 @@ def handle(method, path, headers, read_body, client_ip):
         except ValueError:
             return Response(400, {"error": "JSON inválido."})
         return routes[path](body, headers, client_ip)
-    except Exception as exc:  # erro inesperado: não vaza detalhes para o navegador
+    except Exception as exc:
         print("Erro na API:", repr(exc))
         return Response(500, {"error": "O servidor teve um problema. Tente de novo em instantes."})
-
 
 def api_register(body, headers, _ip):
     name = str(body.get("name", "")).strip()
@@ -245,7 +218,6 @@ def api_register(body, headers, _ip):
         return Response(409, {"error": "Já existe uma conta com este e-mail. Tente entrar.", "field": "email"})
     return Response(201, {"user": public_user(user)}, token=token, remember=bool(body.get("remember", True)))
 
-
 def api_login(body, headers, ip):
     email = str(body.get("email", "")).strip().lower()
     password = str(body.get("password", ""))
@@ -261,14 +233,12 @@ def api_login(body, headers, ip):
         token = create_session(db, user["id"])
     return Response(200, {"user": public_user(user)}, token=token, remember=bool(body.get("remember", False)))
 
-
 def api_logout(_body, headers, _ip):
     token = session_token(headers)
     if token:
         with DB() as db:
             db.run("DELETE FROM sessions WHERE token_hash = ?", (token_hash(token),))
     return Response(200, {"ok": True}, token="")
-
 
 def api_me(headers):
     token = session_token(headers)

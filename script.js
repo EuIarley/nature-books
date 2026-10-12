@@ -5,7 +5,6 @@ const brl=n=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 
-/* ---------- categorias ---------- */
 const CATS={
   literatura:{n:"Literatura em português",c:["#7A5A3E","#5E4630","#8C6A48"],f:"#F2E6CF"},
   internacional:{n:"Literatura internacional",c:["#3F5A4A","#56705C","#2F4A3C"],f:"#EFE7D2"},
@@ -20,7 +19,6 @@ const CATS={
 };
 const GROUPS={ficcao:["literatura","internacional","fantasia"]};
 
-/* ---------- catálogo: título|autor|preço|ano|descrição ---------- */
 const RAW={
 literatura:`Dom Casmurro|Machado de Assis|39.9|1899|Bentinho revisita a memória e o ciúme em torno de Capitu e de seus olhos de ressaca.
 Memórias Póstumas de Brás Cubas|Machado de Assis|42.9|1881|Um defunto autor narra a própria vida com ironia, melancolia e humor ácido.
@@ -137,7 +135,6 @@ for(const cat in RAW){RAW[cat].trim().split("\n").forEach((ln,i)=>{
   BOOKS.push({id,t,a,p:+p,y:+y,d,cat,rating,reviews,avail:id%13!==0,best,isNew:NEW.includes(id),shade:i%3,motif:(id*7)%6});
 });}
 
-/* catálogo ampliado (livros.js): descrições curtas geradas por categoria */
 const DESC={
   literatura:["Um livro de {a} para conhecer a literatura em língua portuguesa de perto.","{a} em uma obra publicada em {y}, com a força da prosa em português.","Para ler com calma, sublinhar e voltar a reler: um título de {a}."],
   internacional:["Um romance de {a} que atravessa gerações de leitores desde {y}.","{a} em uma das obras que ajudam a contar a história da ficção mundial.","Uma narrativa de {a} para quem gosta de personagens marcantes."],
@@ -158,7 +155,6 @@ const DESC={
 const byId=Object.fromEntries(BOOKS.map(b=>[b.id,b]));
 const TOP_REV=[...BOOKS].sort((a,b)=>b.reviews-a.reviews).slice(0,10).map(b=>b.id);
 
-/* ---------- capas ilustradas ---------- */
 const MOTIFS=[
  '<path d="M50 12C78 30 80 68 50 90 20 68 22 30 50 12z"/><path d="M50 18v72M50 40l-14-10M50 52l16-12M50 64l-16-10M50 76l14-10"/>',
  '<circle cx="50" cy="50" r="16"/><circle cx="50" cy="50" r="27" stroke-dasharray="2 5"/><circle cx="50" cy="50" r="38" opacity=".5"/>',
@@ -167,7 +163,6 @@ const MOTIFS=[
  '<path d="M50 94V10"/><path d="M50 22c-10-2-18 2-22 8M50 22c10-2 18 2 22 8M50 40c-12-2-22 2-26 10M50 40c12-2 22 2 26 10M50 58c-14-2-24 2-28 12M50 58c14-2 24 2 28 12M50 76c-10 0-18 4-20 10M50 76c10 0 18 4 20 10"/>',
  '<path d="M6 40c14-10 30-10 44 0s30 10 44 0M6 56c14-10 30-10 44 0s30 10 44 0M6 72c14-10 30-10 44 0s30 10 44 0"/>'
 ];
-/* capas originais em capas/NNN.jpg (fonte: Open Library Covers); sem foto, fica a capa ilustrada */
 const NO_PHOTO=[72,76,77];
 const coverSrc=(b,lg)=>b.cover?`https://covers.openlibrary.org/b/id/${b.cover}-${lg?"L":"M"}.jpg`:NO_PHOTO.includes(b.id)?"":`capas/${String(b.id).padStart(3,"0")}.jpg`;
 const photo=(b,lg)=>{const src=coverSrc(b,lg);return src?`<img class="ph" src="${src}" alt="" loading="lazy" decoding="async" onerror="this.remove()">`:"";};
@@ -206,7 +201,6 @@ function card(b,ctx){
   </article>`;
 }
 
-/* ---------- destaques ---------- */
 let viewed=store.get("nb-viewed",[]);
 function recList(){
   const cats=[...new Set(viewed.map(i=>byId[i]&&byId[i].cat).filter(Boolean))];
@@ -225,11 +219,9 @@ $$(".tab").forEach(t=>t.addEventListener("click",()=>{
   curTab=t.dataset.tab;$$(".tab").forEach(x=>x.setAttribute("aria-selected",x===t));renderFeat();
 }));
 
-/* hero tag */
 (function(){const b=byId[71];$("#heroTag").innerHTML=`<div class="mini">${cover(b)}</div><div><small>Leitura da estação</small><strong>${b.t}</strong></div>`;
   $("#heroTag").style.cursor="pointer";$("#heroTag").addEventListener("click",()=>openBook(71));})();
 
-/* ---------- categorias ---------- */
 const CAT_ILL={
  natureza:'<path d="M50 92V40"/><path d="M50 60C30 60 18 46 18 26c20 0 32 14 32 34z"/><path d="M50 50c0-20 12-34 32-34 0 20-12 34-32 34z"/><path d="M50 60L30 40M50 50l20-20"/>',
  ficcao:'<path d="M50 30c-12-8-28-8-40-4v56c12-4 28-4 40 4 12-8 28-8 40-4V26c-12-4-28-4-40 4z"/><path d="M50 30v56M20 40c8-2 16-2 22 1M20 52c8-2 16-2 22 1M58 41c6-3 14-3 22-1M58 53c6-3 14-3 22-1"/>',
@@ -249,7 +241,6 @@ $("#cats").addEventListener("click",e=>{const c=e.target.closest("[data-cat]");i
 $("#footCats").innerHTML=["natureza","literatura","fantasia","misterio","arte"].map(k=>`<li><a href="#encontre" data-fcat="${k}">${CATS[k].n}</a></li>`).join("");
 $("#footCats").addEventListener("click",e=>{const a=e.target.closest("[data-fcat]");if(a)setGenre(a.dataset.fcat);});
 
-/* ---------- catálogo / filtros ---------- */
 const F={q:"",genre:"",author:"",year:"",rating:0,avail:"",max:90,sort:"rel",shown:12};
 const PAGE=12;
 $("#fGenre").innerHTML='<option value="">Todos os gêneros</option><option value="ficcao">Ficção (clássicos, internacional e fantasia)</option>'+Object.entries(CATS).map(([k,v])=>`<option value="${k}">${v.n}</option>`).join("");
@@ -301,7 +292,6 @@ $("#fAvail").addEventListener("change",e=>{F.avail=e.target.value;F.shown=PAGE;r
 $("#fPrice").addEventListener("input",e=>{F.max=+e.target.value;$("#priceOut").textContent="até R$ "+F.max;F.shown=PAGE;renderCatalog();});
 $("#fSort").addEventListener("change",e=>{F.sort=e.target.value;renderCatalog();});
 
-/* ---------- carrinho ---------- */
 let cart=store.get("nb-cart",{});
 const SHIP=14.9, FREE=150;
 const cartItems=()=>Object.entries(cart).filter(([i])=>byId[i]).map(([i,q])=>({b:byId[i],q}));
@@ -357,7 +347,6 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeCart();toggleS
 
 let tT;function toast(msg){const t=$("#toast");t.querySelector("span").textContent=msg;t.classList.add("on");clearTimeout(tT);tT=setTimeout(()=>t.classList.remove("on"),2400);}
 
-/* ---------- página do livro ---------- */
 function stars(r){return `<span class="stars" aria-label="Nota ${r} de 5">★★★★★<i style="width:${r/5*100}%">★★★★★</i></span>`;}
 let pageQty=1;
 function openBook(i){
@@ -409,7 +398,6 @@ function goTo(anchor){
 }
 $("#bookPage").addEventListener("click",e=>{const h=e.target.closest("[data-home]");if(!h)return;if(h.dataset.g)setGenre(h.dataset.g);goTo(h.dataset.home);});
 
-/* clicks globais: abrir livro, adicionar, âncoras */
 document.addEventListener("click",e=>{
   const o=e.target.closest("[data-open]");if(o){e.preventDefault();openBook(+o.dataset.open);return;}
   const a=e.target.closest("[data-add]");if(a){addToCart(+a.dataset.add);return;}
@@ -417,7 +405,6 @@ document.addEventListener("click",e=>{
   if(l&&l.getAttribute("href").length>1){e.preventDefault();$("#nav").classList.remove("open");$("#burger").setAttribute("aria-expanded","false");goTo(l.getAttribute("href").slice(1));}
 });
 
-/* ---------- busca no cabeçalho ---------- */
 function toggleSearch(on){
   const p=$("#searchPanel");on=on===undefined?p.hidden:on;p.hidden=!on;$("#searchBtn").setAttribute("aria-expanded",on);
   if(on){$("#globalSearch").focus();}else{$("#globalSearch").value="";$("#suggest").innerHTML="";}
@@ -433,11 +420,9 @@ $("#globalSearch").addEventListener("input",e=>{
 });
 $("#globalSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){F.q=e.target.value;$("#q").value=F.q;F.shown=PAGE;renderCatalog();toggleSearch(false);goTo("encontre");}});
 
-/* menu mobile */
 $("#burger").addEventListener("click",()=>{const n=$("#nav"),o=!n.classList.contains("open");n.classList.toggle("open",o);$("#burger").setAttribute("aria-expanded",o);});
 addEventListener("scroll",()=>$("#top").classList.toggle("scrolled",scrollY>8),{passive:true});
 
-/* ---------- sobre: lombadas ---------- */
 (function(){
   const cols=["#6E7F4D","#B48A62","#3F5A4A","#C7B48D","#8E7A5C","#B98B7E","#5B6B3F","#D9CDB3","#7A5A3E","#4D5B3A"];
   let s="",k=0;
@@ -453,7 +438,6 @@ addEventListener("scroll",()=>$("#top").classList.toggle("scrolled",scrollY>8),{
   $("#fernLeaves").innerHTML=f;
 })();
 
-/* ---------- depoimentos ---------- */
 function avatar(bg,skin,hair,shirt,long){
   return `<svg viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="${bg}"/>
   ${long?`<path d="M14 34c0-16 6-24 16-24s16 8 16 24v14H14z" fill="${hair}"/>`:""}
@@ -468,14 +452,12 @@ const QUOTES=[
 ];
 $("#quotes").innerHTML=QUOTES.map(([q,n,r,av])=>`<figure class="quote rv"><svg class="qm" viewBox="0 0 32 24" fill="currentColor"><path d="M0 24V14C0 6 4 1 12 0v5c-4 1-6 4-6 8h6v11zm18 0V14c0-8 4-13 12-14v5c-4 1-6 4-6 8h6v11z"/></svg><blockquote>“${q}”</blockquote><figcaption>${av}<span><b>${n}</b><span>${r}</span></span></figcaption></figure>`).join("");
 
-/* ---------- newsletter ---------- */
 $("#newsForm").addEventListener("submit",e=>{
   e.preventDefault();const v=$("#newsEmail").value.trim(),m=$("#newsMsg");
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){m.textContent="Confira o e-mail: ele precisa ter o formato nome@exemplo.com.";$("#newsEmail").focus();return;}
   m.textContent="Pronto! Seu e-mail entrou na lista de recomendações da Nature Books.";$("#newsEmail").value="";
 });
 
-/* ---------- reveal ---------- */
 function setupReveal(){
   if(!("IntersectionObserver" in window)||matchMedia("(prefers-reduced-motion: reduce)").matches)return;
   const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.remove("wait");io.unobserve(en.target);}}),{rootMargin:"0px 0px -8% 0px"});

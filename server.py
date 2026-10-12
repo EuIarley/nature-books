@@ -1,23 +1,14 @@
-"""Nature Books — servidor local com login e registro.
-
-Serve o site e a API de contas (a mesma lógica usada na Vercel, em api/_nb.py).
-Localmente guarda tudo em SQLite (nature_books.db): nada para instalar.
-
-    python server.py            -> http://localhost:8000
-    python server.py 8080       -> outra porta
-"""
 import os
 import sys
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(ROOT, "api"))
-import _nb  # noqa: E402
+import _nb
 
 HOST = "127.0.0.1"
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
 BLOCKED = (".py", ".db", ".db-journal", ".db-wal", ".db-shm", ".bat", ".md", ".txt", ".json")
-
 
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
@@ -53,7 +44,6 @@ class Handler(SimpleHTTPRequestHandler):
     def log_message(self, fmt, *args):
         if "/api/" in self.path or (args and str(args[1]) >= "400"):
             super().log_message(fmt, *args)
-
 
 if __name__ == "__main__":
     _nb.ensure_schema()

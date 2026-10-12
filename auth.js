@@ -1,11 +1,9 @@
-/* Nature Books — login e registro (fala com server.py / SQLite) */
 (function(){
 "use strict";
 const $=s=>document.querySelector(s);
 const dlg=$("#authDialog");
 let user=null, afterLogin=null;
 
-/* ---------- API ---------- */
 async function api(path,body){
   let res;
   try{
@@ -19,7 +17,6 @@ async function api(path,body){
 }
 const offline=location.protocol==="file:";
 
-/* ---------- cabeçalho ---------- */
 const firstName=n=>n.trim().split(/\s+/)[0];
 function renderHeader(){
   const btn=$("#accountBtn"), av=$("#avatar");
@@ -53,7 +50,6 @@ $("#acctMenu").addEventListener("click",async e=>{
   user=null;renderHeader();toast("Você saiu da sua conta. Até a próxima leitura!");
 });
 
-/* ---------- janela de login / registro ---------- */
 function setTab(tab){
   const login=tab==="login";
   $("#tabLogin").setAttribute("aria-selected",login);$("#tabRegister").setAttribute("aria-selected",!login);
@@ -90,7 +86,6 @@ function fail(errEl,msg,input){
 }
 const EMAIL=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-/* força da senha */
 $("#regPass").addEventListener("input",e=>{
   const v=e.target.value;let s=0;
   if(v.length>=8)s++;if(v.length>=12)s++;if(/[a-z]/i.test(v)&&/\d/.test(v))s++;if(/[^a-z0-9]/i.test(v))s++;
@@ -137,12 +132,9 @@ $("#registerForm").addEventListener("submit",e=>{
   });
 });
 
-/* aviso reaproveitando o toast do site */
 let tT;function toast(msg){const t=$("#toast");t.querySelector("span").textContent=msg;t.classList.add("on");clearTimeout(tT);tT=setTimeout(()=>t.classList.remove("on"),2600);}
 
-/* API pública usada pelo carrinho */
 window.NBAuth={get user(){return user},open};
 
-/* sessão atual */
 if(!offline)api("/api/me").then(d=>{user=d.user;renderHeader();}).catch(()=>{});
 })();

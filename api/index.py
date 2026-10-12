@@ -1,15 +1,12 @@
-"""Função da Vercel: recebe todas as rotas /api/* (veja vercel.json)."""
 import os
 import sys
 from http.server import BaseHTTPRequestHandler
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import _nb  # noqa: E402
-
+import _nb
 
 class handler(BaseHTTPRequestHandler):
     def _run(self, method):
-        # na Vercel o IP real do visitante vem no cabeçalho x-forwarded-for
         ip = (self.headers.get("x-forwarded-for") or self.client_address[0]).split(",")[0].strip()
         res = _nb.handle(method, self.path, self.headers, self.rfile.read, ip)
         payload = res.body()

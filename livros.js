@@ -1,5 +1,3 @@
-/* Catálogo ampliado: livros reais do Open Library (openlibrary.org), com título e capa da edição em português quando disponível.
-   Formato: [título, autor, preço (fictício), ano, categoria, nota, nº de avaliações, id da capa, páginas] */
 window.NB_CATALOGO=[["Dom Casmurro","Machado de Assis",64.9,1900,"literatura",4.4,21,15241023,268],
 ["A Hora Da Estrela","Clarice Lispector",39.9,1977,"literatura",3.9,16,15249744,88],
 ["Dona Flor e Seus Dois Maridos","Jorge Leal Amado de Faria",89.9,1966,"literatura",4.2,10,14342197,485],
