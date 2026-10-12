@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nature Books</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-leaf" viewBox="0 0 32 32"><path d="M6 26C6 13 14 6 27 5c0 13-7 21-19 21" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M6 26C11 19 16 14 22 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 016 0V8" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 8h16M4 16h11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.5 6 .7-4.4 4.1 1.2 5.9L12 16.8 6.6 19.7l1.2-5.9L3.4 9.7l6-.7z" fill="currentColor"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.8" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 20c1.2-3.8 4-5.6 7.5-5.6s6.3 1.8 7.5 5.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="#inicio" aria-label="Nature Books, início">
+      <svg viewBox="0 0 32 32"><use href="#i-leaf"/></svg>
+      <b>Nature <i>Books</i></b>
+    </a>
+    <nav class="nav" id="nav" aria-label="Principal">
+      <a href="#inicio">Início</a>
+      <a href="#destaques">Livros</a>
+      <a href="#categorias">Categorias</a>
+      <a href="#sobre">Sobre nós</a>
+      <a href="#contato">Contato</a>
+    </nav>
+    <div class="tools">
+      <button class="icon-btn" id="searchBtn" aria-label="Pesquisar livros" aria-expanded="false"><svg><use href="#i-search"/></svg></button>
+      <div class="acct">
+        <button class="icon-btn" id="accountBtn" aria-label="Entrar ou criar conta" aria-haspopup="true" aria-expanded="false"><svg><use href="#i-user"/></svg><span class="avatar" id="avatar" hidden></span></button>
+        <div class="acct-menu" id="acctMenu" hidden></div>
+      </div>
+      <button class="icon-btn" id="cartBtn" aria-label="Abrir sacola"><svg><use href="#i-bag"/></svg><span class="count" id="cartCount" hidden>0</span></button>
+      <button class="icon-btn burger" id="burger" aria-label="Abrir menu" aria-expanded="false" aria-controls="nav"><svg><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+  <div class="search-panel" id="searchPanel" hidden>
+    <div class="wrap">
+      <div class="search-field">
+        <svg><use href="#i-search"/></svg>
+        <input id="globalSearch" type="search" placeholder="Busque por título ou autor" autocomplete="off" aria-label="Buscar por título ou autor">
+        <button class="icon-btn" id="searchClose" aria-label="Fechar busca"><svg><use href="#i-x"/></svg></button>
+      </div>
+      <div class="suggest" id="suggest"></div>
+    </div>
+  </div>
+</header>
+
+<main id="home">
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="wrap">
+      <div class="rv">
+        <span class="eyebrow"><svg><use href="#i-leaf"/></svg>Biblioteca &amp; livraria natural</span>
+        <h1>Entre páginas, encontre <em>novos mundos.</em></h1>
+        <p class="lead">Descubra histórias, conhecimentos e lugares para onde somente um bom livro pode levar você.</p>
+        <div class="ctas">
+          <a class="btn btn-primary" href="#encontre">Explorar livros <svg><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-ghost" href="#sobre">Conheça a Nature Books</a>
+        </div>
+        <div class="meta">
+          <div><b data-total>1.000+</b>títulos no catálogo</div>
+          <div><b>10</b>coleções temáticas</div>
+          <div><b>R$ 150</b>frete grátis a partir de</div>
+        </div>
+      </div>
+      <div class="hero-art rv">
+        <svg class="scene" viewBox="0 0 560 520" role="img" aria-label="Ilustração de uma mesa de madeira junto a uma janela, com livros empilhados, uma xícara, plantas e luz natural entrando">
+          <defs>
+            <clipPath id="win"><path d="M170 330V150a130 130 0 0 1 260 0v180z"/></clipPath>
+            <linearGradient id="beamG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--beam)" stop-opacity=".9"/><stop offset="1" stop-color="var(--beam)" stop-opacity="0"/></linearGradient>
+            <linearGradient id="deskG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--wood-2)"/><stop offset="1" stop-color="var(--wood)"/></linearGradient>
+          </defs>
+          <rect width="560" height="520" fill="var(--paper-2)"/>
+          <!-- shelf left -->
+          <rect x="30" y="196" width="110" height="7" rx="2" fill="var(--wood)"/>
+          <rect x="40" y="152" width="13" height="44" rx="1.5" fill="#6E7F4D"/><rect x="55" y="160" width="10" height="36" rx="1.5" fill="#B48A62"/><rect x="67" y="148" width="14" height="48" rx="1.5" fill="#3F5A4A"/><rect x="88" y="166" width="10" height="30" rx="1.5" fill="#C7B48D" transform="rotate(-14 93 196)"/>
+          <path d="M112 196c-1-9 4-16 12-16s13 7 12 16z" fill="var(--wood-2)"/>
+          <g class="sway s2"><path d="M124 181c-8-14-2-28 0-30 2 2 8 16 0 30z" fill="var(--leaf)"/><path d="M124 182c-14-6-18-18-16-21 4 0 15 8 16 21z" fill="var(--leaf-2)"/><path d="M124 182c10-10 22-10 24-8-1 4-12 11-24 8z" fill="var(--leaf)"/></g>
+          <!-- window -->
+          <path d="M170 330V150a130 130 0 0 1 260 0v180z" fill="var(--sky)"/>
+          <g clip-path="url(#win)">
+            <circle cx="380" cy="110" r="26" fill="var(--beam)" opacity=".7"/>
+            <path d="M160 300c50-40 90-30 140-10s90 10 140-20v70H160z" fill="var(--leaf-2)" opacity=".55"/>
+            <circle cx="215" cy="250" r="44" fill="var(--leaf)" opacity=".6"/><circle cx="250" cy="275" r="34" fill="var(--leaf-2)" opacity=".7"/>
+            <circle cx="400" cy="255" r="50" fill="var(--leaf)" opacity=".55"/><circle cx="360" cy="285" r="30" fill="var(--leaf-2)" opacity=".6"/>
+            <rect x="211" y="270" width="6" height="60" fill="var(--wood)" opacity=".6"/><rect x="397" y="280" width="6" height="50" fill="var(--wood)" opacity=".6"/>
+          </g>
+          <path d="M170 330V150a130 130 0 0 1 260 0v180z" fill="none" stroke="var(--wood)" stroke-width="10"/>
+          <path d="M300 22v308M170 190h260" stroke="var(--wood)" stroke-width="6"/>
+          <rect x="152" y="328" width="296" height="14" rx="3" fill="var(--wood-2)"/>
+          <!-- sill plant -->
+          <path d="M196 328l-5-24h34l-5 24z" fill="#C9A88A"/>
+          <g class="sway"><path d="M208 305c-3-22 4-34 8-36 2 6 2 22-8 36z" fill="var(--leaf)"/><path d="M208 305c-16-10-18-26-15-28 6 2 15 14 15 28z" fill="var(--leaf-2)"/><path d="M208 305c10-14 24-16 27-14-2 6-14 15-27 14z" fill="var(--leaf)"/></g>
+          <!-- hanging plant -->
+          <path d="M490 0v70" stroke="var(--ink-2)" stroke-width="1.2" opacity=".5"/>
+          <g class="sway sw-top">
+            <path d="M472 70h36l-5 22h-26z" fill="var(--wood-2)"/>
+            <path d="M478 90c-6 30-2 60 4 90" fill="none" stroke="var(--leaf)" stroke-width="2"/>
+            <path d="M500 90c6 26 4 52-2 72" fill="none" stroke="var(--leaf)" stroke-width="2"/>
+            <g fill="var(--leaf-2)"><ellipse cx="474" cy="110" rx="7" ry="4" transform="rotate(-30 474 110)"/><ellipse cx="484" cy="132" rx="7" ry="4" transform="rotate(30 484 132)"/><ellipse cx="476" cy="152" rx="7" ry="4" transform="rotate(-30 476 152)"/><ellipse cx="486" cy="174" rx="7" ry="4" transform="rotate(30 486 174)"/></g>
+            <g fill="var(--leaf)"><ellipse cx="506" cy="106" rx="7" ry="4" transform="rotate(30 506 106)"/><ellipse cx="498" cy="126" rx="7" ry="4" transform="rotate(-30 498 126)"/><ellipse cx="506" cy="146" rx="7" ry="4" transform="rotate(30 506 146)"/></g>
+          </g>
+          <!-- light beam -->
+          <path class="beam" d="M175 342h250l-40 128H55z" fill="url(#beamG)"/>
+          <!-- desk -->
+          <rect x="18" y="402" width="524" height="22" rx="5" fill="url(#deskG)"/>
+          <rect x="40" y="424" width="14" height="96" fill="var(--wood)"/><rect x="506" y="424" width="14" height="96" fill="var(--wood)"/>
+          <rect x="18" y="424" width="524" height="6" fill="#000" opacity=".08"/>
+          <!-- book stack -->
+          <g>
+            <rect x="52" y="384" width="128" height="18" rx="2" fill="#3F5A4A"/><rect x="52" y="384" width="6" height="18" fill="#000" opacity=".12"/>
+            <rect x="60" y="366" width="114" height="18" rx="2" fill="#B98B7E"/>
+            <rect x="48" y="350" width="120" height="16" rx="2" fill="#C7B48D"/>
+            <rect x="64" y="334" width="100" height="16" rx="2" fill="#6E7F4D"/>
+            <path d="M70 392h90M76 374h86M62 358h92M76 342h78" stroke="#fff" stroke-opacity=".28" stroke-width="1.2"/>
+          </g>
+          <!-- open book -->
+          <path d="M214 400c22-12 50-14 76-4v6c-26-8-52-6-76 4z" fill="var(--wood)" opacity=".4"/>
+          <path d="M210 398c26-14 54-14 80-2 26-12 54-12 80 2l-4-46c-26-12-50-12-76 2-26-14-50-14-76-2z" fill="#F7F1E2"/>
+          <path d="M290 396V352" stroke="#D8CDB4" stroke-width="1.5"/>
+          <path d="M226 368c18-6 34-6 50-1M226 378c18-6 34-6 50-1M226 388c18-6 34-6 50-1M304 367c16-5 32-5 50 1M304 377c16-5 32-5 50 1" stroke="#C9BD9F" stroke-width="1.2" fill="none"/>
+          <path d="M318 352v26l6-5 6 5v-28" fill="#7D9160"/>
+          <!-- mug -->
+          <rect x="392" y="366" width="34" height="36" rx="5" fill="#E9E0CB"/>
+          <path d="M426 374c12 0 12 20 0 20" fill="none" stroke="#E9E0CB" stroke-width="5"/>
+          <rect x="392" y="372" width="34" height="5" fill="#7D9160" opacity=".6"/>
+          <g class="steam" fill="none" stroke="var(--ink-2)" stroke-width="1.6" stroke-linecap="round"><path d="M402 356c-6-8 6-12 0-22"/><path d="M414 356c-6-8 6-12 0-24"/></g>
+          <!-- big plant -->
+          <path d="M452 402l-6-38h66l-6 38z" fill="#C9A88A"/><rect x="444" y="360" width="70" height="8" rx="2" fill="#B48A62"/>
+          <g class="sway">
+            <path d="M478 360c-30-24-46-70-30-96 18 12 34 58 30 96z" fill="var(--leaf)"/>
+            <path d="M480 360c4-46 30-82 52-86 4 26-20 72-52 86z" fill="var(--leaf-2)"/>
+            <path d="M478 360c-30-6-58-26-62-44 20-4 52 14 62 44z" fill="var(--leaf-2)"/>
+            <path d="M480 360c6-30 0-70-12-96" fill="none" stroke="var(--moss)" stroke-width="1.4" opacity=".5"/>
+          </g>
+        </svg>
+        <svg class="drift" style="top:6%;left:4%" viewBox="0 0 32 32"><use href="#i-leaf"/></svg>
+        <svg class="drift" style="top:40%;right:-10px;animation-delay:-6s;width:16px" viewBox="0 0 32 32"><use href="#i-leaf"/></svg>
+        <div class="tag" id="heroTag"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESTAQUES -->
+  <section class="sec" id="destaques" style="padding-top:clamp(24px,4vw,48px)">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div>
+          <span class="eyebrow"><svg><use href="#i-leaf"/></svg>Livros em destaque</span>
+          <h2>Escolhidos para <em class="it">ler devagar</em></h2>
+        </div>
+        <div class="tabs" role="tablist" aria-label="Seleções">
+          <button class="tab" role="tab" aria-selected="true" data-tab="best">Mais vendidos</button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="rated">Mais avaliados</button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="new">Novidades</button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="rec">Recomendados para você</button>
+        </div>
+      </div>
+      <div class="grid feat-grid" id="featGrid" role="tabpanel"></div>
+    </div>
+  </section>
+
+  <!-- CATEGORIAS -->
+  <section class="sec" id="categorias" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div>
+          <span class="eyebrow"><svg><use href="#i-leaf"/></svg>Categorias</span>
+          <h2>Cada estante, <em class="it">um caminho</em></h2>
+        </div>
+        <p>Escolha uma estante e veja os livros dela no catálogo logo abaixo.</p>
+      </div>
+      <div class="cats" id="cats"></div>
+    </div>
+  </section>
+
+  <!-- ENCONTRE -->
+  <section class="sec" id="encontre" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div>
+          <span class="eyebrow"><svg><use href="#i-leaf"/></svg>Catálogo completo</span>
+          <h2>Encontre seu <em class="it">próximo livro</em></h2>
+        </div>
+        <p><span data-total>Mais de mil</span> títulos entre clássicos, romances, mistérios e ensaios sobre a natureza. Combine os filtros para chegar ao livro certo.</p>
+      </div>
+      <div class="finder rv">
+        <div class="search-field">
+          <svg><use href="#i-search"/></svg>
+          <input id="q" type="search" placeholder="Qual história você está procurando?" autocomplete="off" aria-label="Pesquisar por título ou autor">
+        </div>
+        <div class="chips" id="chips" aria-label="Filtrar por categoria"></div>
+        <div class="filters">
+          <div class="fld"><label for="fGenre">Gênero</label><select id="fGenre"></select></div>
+          <div class="fld"><label for="fAuthor">Autor</label><input id="fAuthor" type="search" list="authorList" placeholder="Qualquer autor" autocomplete="off"><datalist id="authorList"></datalist></div>
+          <div class="fld"><label for="fYear">Ano</label><select id="fYear">
+            <option value="">Qualquer época</option><option value="a">Antes de 1900</option><option value="b">1900 a 1949</option><option value="c">1950 a 1999</option><option value="d">2000 em diante</option></select></div>
+          <div class="fld"><label for="fRating">Avaliação</label><select id="fRating">
+            <option value="0">Todas</option><option value="4.5">4,5 ou mais</option><option value="4.7">4,7 ou mais</option></select></div>
+          <div class="fld"><label for="fAvail">Disponibilidade</label><select id="fAvail">
+            <option value="">Todas</option><option value="1">Pronta entrega</option><option value="0">Sob encomenda</option></select></div>
+          <div class="fld"><label for="fPrice">Preço <output id="priceOut">até R$ 90</output></label><input type="range" id="fPrice" min="25" max="90" step="5" value="90"></div>
+        </div>
+      </div>
+      <div class="resbar">
+        <p id="resCount"></p>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <button class="linkbtn" id="clearF" hidden>Limpar filtros</button>
+          <div class="fld" style="grid-template-columns:auto auto;align-items:center;gap:10px">
+            <label for="fSort">Ordenar</label>
+            <select id="fSort">
+              <option value="rel">Relevância</option><option value="pa">Menor preço</option><option value="pd">Maior preço</option><option value="ra">Melhor avaliação</option><option value="rv">Mais avaliados</option><option value="az">Título (A–Z)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="grid" id="catalog"></div>
+      <div class="more" id="more"></div>
+    </div>
+  </section>
+
+  <!-- SOBRE -->
+  <section class="sec about" id="sobre" style="padding-top:0">
+    <div class="wrap">
+      <div class="rv">
+        <svg class="scene" viewBox="0 0 560 480" role="img" aria-label="Ilustração de uma biblioteca com estantes de madeira, escada e plantas pendentes">
+          <rect width="560" height="480" fill="var(--tint)"/>
+          <path d="M60 480V170a220 150 0 0 1 440 0v310z" fill="var(--paper-2)"/>
+          <path d="M60 480V170a220 150 0 0 1 440 0v310" fill="none" stroke="var(--wood)" stroke-width="8"/>
+          <g id="shelves">
+            <rect x="80" y="196" width="400" height="8" fill="var(--wood)"/>
+            <rect x="80" y="286" width="400" height="8" fill="var(--wood)"/>
+            <rect x="80" y="376" width="400" height="8" fill="var(--wood)"/>
+            <rect x="275" y="110" width="10" height="370" fill="var(--wood)"/>
+          </g>
+          <g id="spines"></g>
+          <!-- ladder -->
+          <g stroke="var(--wood-2)" stroke-width="6" stroke-linecap="round"><path d="M372 120l-40 360M412 120l-40 360"/><path d="M366 170h40M358 240h40M350 310h40M342 380h40M334 450h40" stroke-width="5"/></g>
+          <!-- floor plant -->
+          <path d="M100 480l-8-46h70l-8 46z" fill="#C9A88A"/>
+          <g class="sway"><path d="M126 436c-34-26-46-80-24-108 20 18 32 66 24 108z" fill="var(--leaf)"/><path d="M128 436c4-50 32-84 56-88 4 30-24 76-56 88z" fill="var(--leaf-2)"/><path d="M126 436c-34-4-60-24-64-44 22-4 54 14 64 44z" fill="var(--leaf-2)"/></g>
+          <!-- hanging vines -->
+          <g class="sway sw-top"><path d="M200 60c-4 40 6 80 0 140" fill="none" stroke="var(--leaf)" stroke-width="2"/><g fill="var(--leaf-2)"><ellipse cx="196" cy="90" rx="8" ry="4" transform="rotate(-30 196 90)"/><ellipse cx="206" cy="118" rx="8" ry="4" transform="rotate(30 206 118)"/><ellipse cx="198" cy="148" rx="8" ry="4" transform="rotate(-30 198 148)"/><ellipse cx="204" cy="178" rx="8" ry="4" transform="rotate(30 204 178)"/></g></g>
+          <g class="sway sw-top s2"><path d="M340 50c6 40-4 70 2 110" fill="none" stroke="var(--leaf)" stroke-width="2"/><g fill="var(--leaf)"><ellipse cx="344" cy="80" rx="8" ry="4" transform="rotate(30 344 80)"/><ellipse cx="336" cy="108" rx="8" ry="4" transform="rotate(-30 336 108)"/><ellipse cx="344" cy="136" rx="8" ry="4" transform="rotate(30 344 136)"/></g></g>
+          <!-- light -->
+          <path d="M520 0L360 480h200V0z" fill="var(--beam)" opacity=".25" class="beam"/>
+        </svg>
+      </div>
+      <div class="rv">
+        <span class="eyebrow"><svg><use href="#i-leaf"/></svg>Sobre nós</span>
+        <h2>Mais do que uma <em class="it">biblioteca.</em></h2>
+        <p>A Nature Books nasceu da ideia de transformar a leitura em uma experiência tranquila e inspiradora. Um espaço onde livros e natureza se encontram para criar momentos de descoberta, aprendizado e imaginação.</p>
+        <p>Cada título do nosso acervo é escolhido como se fosse para a estante de casa: com tempo, cuidado e vontade de compartilhar.</p>
+        <div class="pillars">
+          <div><b data-total>1.000+</b><span>livros para descobrir</span></div>
+          <div><b>10</b><span>coleções para explorar</span></div>
+          <div><b>4,6</b><span>nota média dos leitores</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEPOIMENTOS -->
+  <section class="sec" id="depoimentos" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <div>
+          <span class="eyebrow"><svg><use href="#i-leaf"/></svg>Depoimentos</span>
+          <h2>O que dizem <em class="it">nossos leitores</em></h2>
+        </div>
+      </div>
+      <div class="quotes" id="quotes"></div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="wrap rv" id="newsletter">
+    <div class="news">
+      <svg class="fern" viewBox="0 0 100 160" fill="currentColor" aria-hidden="true"><path d="M50 160C48 110 50 60 60 0" stroke="currentColor" stroke-width="2" fill="none"/><g id="fernLeaves"></g></svg>
+      <div>
+        <h2>Uma nova história <em>esperando por você.</em></h2>
+        <p>Receba recomendações de livros, novidades e conteúdos para amantes da leitura.</p>
+      </div>
+      <div>
+        <form id="newsForm" novalidate>
+          <input id="newsEmail" type="email" placeholder="Digite seu e-mail" aria-label="Seu e-mail" autocomplete="email">
+          <button class="btn" type="submit">Quero receber</button>
+        </form>
+        <p class="msg" id="newsMsg" role="status"></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<main id="bookPage" class="wrap bp" hidden></main>
+
+<footer id="contato">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="#inicio"><svg viewBox="0 0 32 32"><use href="#i-leaf"/></svg><b>Nature <i>Books</i></b></a>
+        <p class="tagline">Livros, natureza e novas histórias.</p>
+        <div class="social">
+          <a href="https://www.instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".8" fill="currentColor"/></svg></a>
+          <a href="https://www.pinterest.com" target="_blank" rel="noopener" aria-label="Pinterest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M11 9.5l-2.5 11M10 15c4 2 7-1 7-4.5S14 6 11.5 6.5 7.5 9 8.5 12"/></svg></a>
+          <a href="https://www.facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M14.5 8H16V4.8h-2a3.5 3.5 0 00-3.5 3.5V11H8.5v3h2v7h3v-7h2.2l.5-3h-2.7V8.8c0-.5.4-.8 1-.8z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Navegue</h4>
+        <ul><li><a href="#inicio">Início</a></li><li><a href="#destaques">Livros</a></li><li><a href="#categorias">Categorias</a></li><li><a href="#sobre">Sobre</a></li><li><a href="#contato">Contato</a></li></ul>
+      </div>
+      <div>
+        <h4>Coleções</h4>
+        <ul id="footCats"></ul>
+      </div>
+      <div>
+        <h4>Contato</h4>
+        <address>
+          <span>Rua das Acácias, 120<br>Vila Madalena, São Paulo</span>
+          <span>Seg. a sáb., das 9h às 19h</span>
+          <span>Frete grátis acima de R$ 150</span>
+        </address>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2026 Nature Books. Todos os direitos reservados.</span>
+      <span>Projeto demonstrativo · preços fictícios · capas via <a href="https://openlibrary.org" target="_blank" rel="noopener">Open Library</a></span>
+    </div>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="cart" aria-label="Sacola de compras" aria-hidden="true">
+  <div class="dh"><h2>Sua sacola</h2><button class="icon-btn" id="cartClose" aria-label="Fechar sacola"><svg><use href="#i-x"/></svg></button></div>
+  <div class="db" id="cartBody"></div>
+  <div class="df" id="cartFoot"></div>
+</aside>
+<div class="toast" id="toast" role="status"><svg><use href="#i-check"/></svg><span></span></div>
+
+<dialog class="auth" id="authDialog" aria-labelledby="authTitle">
+  <div class="auth-art" aria-hidden="true">
+    <svg viewBox="0 0 200 260" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M100 250V60"/><path d="M100 90c-30 0-52-20-56-50 30 0 52 20 56 50zM100 130c30 0 52-20 56-50-30 0-52 20-56 50zM100 170c-30 0-52-20-56-50 30 0 52 20 56 50zM100 210c30 0 52-20 56-50-30 0-52 20-56 50z"/>
+      <path d="M100 90L62 52M100 130l38-38M100 170l-38-38M100 210l38-38" opacity=".5"/>
+    </svg>
+    <p>“Um leitor vive mil vidas antes de morrer.”</p>
+    <small>George R. R. Martin</small>
+  </div>
+  <div class="auth-body">
+    <button class="icon-btn auth-x" id="authClose" aria-label="Fechar"><svg><use href="#i-x"/></svg></button>
+    <h2 id="authTitle">Bem-vindo à <em>Nature Books</em></h2>
+    <div class="auth-tabs" role="tablist">
+      <button role="tab" id="tabLogin" aria-selected="true" aria-controls="loginForm">Entrar</button>
+      <button role="tab" id="tabRegister" aria-selected="false" aria-controls="registerForm">Criar conta</button>
+    </div>
+    <p class="auth-offline" id="authOffline" hidden>Para entrar ou criar conta, abra o site pelo servidor da Nature Books: rode <code>python server.py</code> na pasta do projeto e acesse <b>http://localhost:8000</b>.</p>
+
+    <form id="loginForm" class="auth-form" novalidate>
+      <div class="af"><label for="loginEmail">E-mail</label><input id="loginEmail" type="email" autocomplete="email" required></div>
+      <div class="af"><label for="loginPass">Senha</label>
+        <div class="pw"><input id="loginPass" type="password" autocomplete="current-password" required><button type="button" class="eye" data-eye="loginPass" aria-label="Mostrar senha"><svg><use href="#i-eye"/></svg></button></div></div>
+      <label class="chk"><input id="loginRemember" type="checkbox" checked> Manter conectado neste computador</label>
+      <p class="auth-err" id="loginErr" role="alert"></p>
+      <button class="btn btn-primary" type="submit">Entrar</button>
+      <p class="auth-alt">Ainda não tem conta? <button type="button" class="linkbtn" data-auth-tab="register">Criar conta</button></p>
+    </form>
+
+    <form id="registerForm" class="auth-form" novalidate hidden>
+      <div class="af"><label for="regName">Nome</label><input id="regName" type="text" autocomplete="name" maxlength="60" required></div>
+      <div class="af"><label for="regEmail">E-mail</label><input id="regEmail" type="email" autocomplete="email" required></div>
+      <div class="af"><label for="regPass">Senha</label>
+        <div class="pw"><input id="regPass" type="password" autocomplete="new-password" minlength="8" required aria-describedby="pwHint"><button type="button" class="eye" data-eye="regPass" aria-label="Mostrar senha"><svg><use href="#i-eye"/></svg></button></div>
+        <div class="meter" aria-hidden="true"><i id="pwMeter"></i></div>
+        <small id="pwHint">Mínimo de 8 caracteres, com letras e números.</small></div>
+      <div class="af"><label for="regPass2">Confirmar senha</label><input id="regPass2" type="password" autocomplete="new-password" required></div>
+      <p class="auth-err" id="regErr" role="alert"></p>
+      <button class="btn btn-primary" type="submit">Criar conta</button>
+      <p class="auth-alt">Já tem conta? <button type="button" class="linkbtn" data-auth-tab="login">Entrar</button></p>
+    </form>
+  </div>
+</dialog>
+
+<script src="livros.js"></script>
+<script src="script.js"></script>
+<script src="auth.js"></script>
+</body>
+</html>

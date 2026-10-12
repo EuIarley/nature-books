@@ -1,0 +1,6 @@
+nature_books.db
+*.db
+*.db-journal
+__pycache__/
+.vercel
+.env*

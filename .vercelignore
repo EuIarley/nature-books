@@ -1,0 +1,7 @@
+server.py
+iniciar.bat
+*.db
+*.db-journal
+__pycache__
+LEIAME.md
+.env*
