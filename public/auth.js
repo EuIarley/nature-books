@@ -47,7 +47,7 @@ $("#acctMenu").addEventListener("click",async e=>{
   closeMenu();
   if(b.dataset.acct==="cart")return $("#cartBtn").click();
   try{await api("/api/logout",{});}catch(err){}
-  user=null;renderHeader();toast("Você saiu da sua conta. Até a próxima leitura!");
+  user=null;if(window.NBCheckout)NBCheckout.reset();renderHeader();toast("Você saiu da sua conta. Até a próxima leitura!");
 });
 
 function setTab(tab){

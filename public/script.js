@@ -328,15 +328,9 @@ $("#cartBody").addEventListener("click",e=>{
 });
 $("#cartFoot").addEventListener("click",e=>{
   if(!e.target.closest("#checkout"))return;
-  if(window.NBAuth&&!NBAuth.user){closeCart();NBAuth.open("login",()=>{renderCart();openCart();});toast("Entre na sua conta para finalizar a compra.");return;}
-  const items=cartItems(), sub=items.reduce((s,x)=>s+x.b.p*x.q,0), total=sub+(sub>=FREE?0:SHIP);
-  const num="NB-"+String(Math.floor(10000+Math.random()*89999));
-  cart={};store.set("nb-cart",cart);
-  $("#cartCount").hidden=true;$("#cartFoot").hidden=true;
-  $("#cartBody").innerHTML=`<div class="done"><svg viewBox="0 0 32 32"><use href="#i-leaf"/></svg><h3>Pedido recebido.</h3>
-    <p>Pedido <b>${num}</b> · ${items.length} ${items.length===1?"título":"títulos"} · total de <b>${brl(total)}</b>.</p>
-    <p class="note">Este é um projeto demonstrativo da Nature Books: nenhum pagamento foi processado e nenhum livro será enviado.</p>
-    <button class="btn btn-primary" data-done>Continuar explorando</button></div>`;
+  closeCart();
+  if(window.NBAuth&&!NBAuth.user){NBAuth.open("login",()=>NBCheckout.open());toast("Entre na sua conta para finalizar a compra.");return;}
+  NBCheckout.open();
 });
 const openCart=()=>{$("#cart").classList.add("on");$("#scrim").classList.add("on");$("#cart").setAttribute("aria-hidden","false");setTimeout(()=>$("#cartClose").focus(),50);};
 const closeCart=()=>{$("#cart").classList.remove("on");$("#scrim").classList.remove("on");$("#cart").setAttribute("aria-hidden","true");};
@@ -383,7 +377,7 @@ function openBook(i){
       </div>
     </div>
     <section class="related"><h2>Da mesma estante</h2><div class="grid feat-grid">${rel.map(x=>card(x,"cat")).join("")}</div></section>`;
-  $("#home").hidden=true;$("#bookPage").hidden=false;
+  showPage("bookPage");
   window.scrollTo({top:0,behavior:"instant"});
   toggleSearch(false);$("#nav").classList.remove("open");
   $("#pqDec").onclick=()=>{pageQty=Math.max(1,pageQty-1);$("#pq").textContent=pageQty;};
@@ -391,8 +385,14 @@ function openBook(i){
   $("#pAdd").onclick=()=>addToCart(b.id,pageQty);
   if(curTab==="rec")renderFeat();
 }
+const PAGES=["home","bookPage","checkoutPage"];
+function showPage(id){
+  if(id!=="checkoutPage"&&!$("#checkoutPage").hidden&&window.NBCheckout)NBCheckout.leave();
+  PAGES.forEach(p=>$("#"+p).hidden=p!==id);
+  toggleSearch(false);$("#nav").classList.remove("open");
+}
 function goTo(anchor){
-  if(!$("#bookPage").hidden){$("#bookPage").hidden=true;$("#home").hidden=false;if(curTab==="rec")renderFeat();}
+  if($("#home").hidden){showPage("home");if(curTab==="rec")renderFeat();}
   const el=document.getElementById(anchor);
   if(el)requestAnimationFrame(()=>el.scrollIntoView({behavior:"smooth"}));
 }
@@ -465,5 +465,6 @@ function setupReveal(){
 }
 
 document.querySelectorAll("[data-total]").forEach(el=>{el.textContent=BOOKS.length.toLocaleString("pt-BR");});
+window.NBStore={items:cartItems,clear(){cart={};saveCart();},brl,esc,cover,toast,goTo,showPage,FREE,SHIP};
 renderFeat();renderCatalog();renderCart();setupReveal();
 })();
