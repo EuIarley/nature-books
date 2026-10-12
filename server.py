@@ -3,30 +3,21 @@ import sys
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+PUBLIC = os.path.join(ROOT, "public")
 sys.path.insert(0, os.path.join(ROOT, "api"))
 import _nb
 
 HOST = "127.0.0.1"
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
-BLOCKED = (".py", ".db", ".db-journal", ".db-wal", ".db-shm", ".bat", ".md", ".txt", ".json")
 
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, directory=ROOT, **kwargs)
+        super().__init__(*args, directory=PUBLIC, **kwargs)
 
     def do_GET(self):
-        path = self.path.split("?", 1)[0].lower()
-        if path.startswith("/api/"):
+        if self.path.split("?", 1)[0].lower().startswith("/api/"):
             return self.api("GET")
-        if path.endswith(BLOCKED) or path.startswith(("/api", "/.git")):
-            return self.send_error(404)
         return super().do_GET()
-
-    def do_HEAD(self):
-        path = self.path.split("?", 1)[0].lower()
-        if path.endswith(BLOCKED) or path.startswith(("/api", "/.git")):
-            return self.send_error(404)
-        return super().do_HEAD()
 
     def do_POST(self):
         return self.api("POST")

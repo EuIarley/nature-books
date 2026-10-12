@@ -10,6 +10,7 @@ from http import cookies
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PG_URL = os.environ.get("DATABASE_URL") or os.environ.get("POSTGRES_URL")
+ON_VERCEL = bool(os.environ.get("VERCEL"))
 DB_PATH = os.environ.get("NB_DB", os.path.join(ROOT, "nature_books.db"))
 
 COOKIE = "nb_session"
@@ -171,6 +172,12 @@ def session_token(headers):
 
 def handle(method, path, headers, read_body, client_ip):
     path = path.split("?", 1)[0].rstrip("/")
+    if not path.startswith("/api/"):
+        return Response(404, {"error": "Página não encontrada."})
+    if path == "/api/status":
+        return api_status()
+    if ON_VERCEL and not PG_URL:
+        return Response(503, {"error": "O banco de dados ainda não foi conectado ao site. Tente de novo mais tarde."})
     try:
         ensure_schema()
         if method == "GET" and path == "/api/me":
@@ -239,6 +246,28 @@ def api_logout(_body, headers, _ip):
         with DB() as db:
             db.run("DELETE FROM sessions WHERE token_hash = ?", (token_hash(token),))
     return Response(200, {"ok": True}, token="")
+
+def api_status():
+    info = {
+        "database": "postgres" if PG_URL else "sqlite",
+        "vercel": ON_VERCEL,
+        "variaveis": [k for k in ("DATABASE_URL", "POSTGRES_URL") if os.environ.get(k)],
+        "conectado": False,
+        "erro": None,
+    }
+    if ON_VERCEL and not PG_URL:
+        info["erro"] = "DATABASE_URL ausente"
+        return Response(503, info)
+    try:
+        ensure_schema()
+        with DB() as db:
+            db.one("SELECT COUNT(*) AS n FROM users")
+        info["conectado"] = True
+    except Exception as exc:
+        print("Erro no status:", repr(exc))
+        info["erro"] = type(exc).__name__
+    return Response(200 if info["conectado"] else 503, info)
+
 
 def api_me(headers):
     token = session_token(headers)

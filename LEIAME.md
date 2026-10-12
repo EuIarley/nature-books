@@ -22,7 +22,7 @@ e acesse http://localhost:8000. As contas ficam em `nature_books.db` (SQLite), c
 2. **Vercel:** em vercel.com, clique em **Add New → Project**, importe o repositório e clique em **Deploy**. Não precisa mudar nenhuma configuração.
 3. **Banco:** no projeto da Vercel, abra **Storage → Create Database → Neon (Postgres)**, crie o banco e conecte ao projeto. A Vercel adiciona a variável `DATABASE_URL` sozinha.
 4. **Atualizar:** em **Deployments**, clique nos três pontinhos do último deploy e em **Redeploy**, para a função passar a enxergar o banco.
-5. **Testar:** abra o site, crie uma conta e recarregue a página. Se o nome continuar no ícone de conta, o banco está funcionando. As tabelas são criadas no primeiro acesso.
+5. **Testar:** abra `/api/status` no seu site: `"conectado": true` indica que o banco está funcionando. Depois abra o site, crie uma conta e recarregue a página. Se o nome continuar no ícone de conta, o banco está funcionando. As tabelas são criadas no primeiro acesso.
 
 Depois disso, cada `git push` publica uma nova versão automaticamente.
 
@@ -30,9 +30,7 @@ Depois disso, cada `git push` publica uma nova versão automaticamente.
 
 | Arquivo | Para que serve |
 |---|---|
-| `index.html`, `style.css`, `script.js` | Página, estilos e catálogo/carrinho |
-| `livros.js` | Catálogo ampliado (livros do Open Library) |
-| `auth.js` | Janela de login/registro e menu da conta |
+| `public/` | O site: `index.html`, `style.css`, `script.js`, `auth.js`, `livros.js` e `capas/` |
 | `api/_nb.py` | Lógica das contas: SQLite no computador, Postgres na Vercel |
 | `api/index.py` | Função da Vercel que atende `/api/*` |
 | `server.py`, `iniciar.bat` | Servidor local (não vão para a Vercel) |
