@@ -9,7 +9,11 @@ import time
 from http import cookies
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PG_URL = os.environ.get("DATABASE_URL") or os.environ.get("POSTGRES_URL")
+PG_VARS = sorted(
+    (k for k, v in os.environ.items() if v and re.search(r"(^|_)(DATABASE_URL|POSTGRES_URL)$", k)),
+    key=lambda k: (not k.endswith("DATABASE_URL"), len(k)),
+)
+PG_URL = os.environ[PG_VARS[0]] if PG_VARS else None
 ON_VERCEL = bool(os.environ.get("VERCEL"))
 DB_PATH = os.environ.get("NB_DB", os.path.join(ROOT, "nature_books.db"))
 
@@ -251,7 +255,8 @@ def api_status():
     info = {
         "database": "postgres" if PG_URL else "sqlite",
         "vercel": ON_VERCEL,
-        "variaveis": [k for k in ("DATABASE_URL", "POSTGRES_URL") if os.environ.get(k)],
+        "variaveis": PG_VARS,
+        "usando": PG_VARS[0] if PG_VARS else None,
         "conectado": False,
         "erro": None,
     }
